@@ -28,7 +28,7 @@ func main() {
 
 	root := "."
 	conf := config{
-		ext:      ".py",
+		ext:      ".ll",
 		list:     true,
 		del:      true,
 		wLogFile: f,
