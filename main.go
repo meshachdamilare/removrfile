@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"log/slog"
@@ -19,6 +20,13 @@ type config struct {
 
 func main() {
 
+	root := flag.String("root", ".", "root directory to start")
+	ext := flag.String("ext", "", "file extensions to filter out")
+	list := flag.Bool("list", true, "list all file found")
+	del := flag.Bool("del", false, "delete files")
+
+	flag.Parse()
+
 	f, err := os.OpenFile("deletedLogFile", os.O_APPEND|os.O_CREATE|os.O_RDWR, 0644)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -26,14 +34,13 @@ func main() {
 	}
 	defer f.Close()
 
-	root := "."
 	conf := config{
-		ext:      ".ll",
-		list:     true,
-		del:      true,
+		ext:      *ext,
+		list:     *list,
+		del:      *del,
 		wLogFile: f,
 	}
-	if err := run(root, os.Stdout, conf); err != nil {
+	if err := run(*root, os.Stdout, conf); err != nil {
 		fmt.Fprintln(os.Stdout, err)
 
 	}
